@@ -30,7 +30,7 @@ const login = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true, //javascrip can not read the cookie only browser can read it
-            secure: process.env.NODE_ENV = "production", //sned cookie only to https scure sites
+            secure: process.env.NODE_ENV = "production", //send cookie only to https secure sites
             maxAge: 15 * 60 * 1000
         })
 
@@ -42,7 +42,7 @@ const login = async (req, res) => {
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true, //javascrip can not read the cookie only browser can read it
-            secure: process.env.NODE_ENV = "production", //sned cookie only to https scure sites
+            secure: process.env.NODE_ENV = "production", //send cookie only to https secure sites
             path: "api/v1/auth/refresh",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
