@@ -17,7 +17,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:5173"],
+  origin: [process.env.CLINET_URL || "http://localhost:5173"],
   credentials: true,
   methods: ['POST', 'GET', 'DELETE', 'PUT', 'PUSH', 'PATCH', 'OPTIONS']
 }));
@@ -40,7 +40,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173"],
+    origin: [process.env.CLINET_URL || "http://localhost:5173"],
     credentials: true,
     transports: ['polling'],
     methods: ['POST', 'GET', 'DELETE', 'PUT', 'PUSH', 'PATCH', 'OPTIONS']
