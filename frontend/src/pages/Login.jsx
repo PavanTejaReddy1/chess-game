@@ -33,20 +33,22 @@ function Login() {
                 <h1 className="text-3xl font-bold text-center mb-6 text-white/80">♟️ Login</h1>
 
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <input type="email" name="email" placeholder="Email"className="p-2 rounded bg-white-/20 border border-white/30 outline-none text-white" />
-                    <input type="password" name="password" placeholder="Password"className="p-2 rounded bg-white-/20 border border-white/30 outline-none text-white" />
+                    <input type="email" name="email" placeholder="Email" className="p-2 rounded bg-white-/20 border border-white/30 outline-none text-white" />
+                    <input type="password" name="password" placeholder="Password" className="p-2 rounded bg-white-/20 border border-white/30 outline-none text-white" />
                     <button className="bg-blue-500 hover:bg-blue-600 p-2 rounded font-semibold cursor-pointer">
                         Login
                     </button>
                 </form>
 
-                <div className="flex gap-2 justify-center items-center m-3">
-                    <div className="border w-[40%] border-white/20"></div>
-                    <p className="text-white/80">OR</p>
-                    <div className="border w-[40%] border-white/20"></div>
-                </div>
-
-                <button className="w-full bg-blue-500 hover:bg-blue-600 p-2 rounded font-semibold cursor-pointer" onClick={() => navigate("/guest")}>Join as Guest</button>
+                <p className="text-center text-white/70 mt-6">
+                    Don’t have an account?{" "}
+                    <span
+                        onClick={() => navigate("/signup")}
+                        className="text-blue-400 hover:underline cursor-pointer"
+                    >
+                        Sign up
+                    </span>
+                </p>
             </div>
         </div>
     )

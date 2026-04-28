@@ -43,6 +43,17 @@ function Signup() {
                         Signup
                     </button>
                 </form>
+
+                <p className="text-center text-white/70 mt-6">
+                    Already have an account?{" "}
+                    <span
+                        onClick={() => navigate("/login")}
+                        className="text-blue-400 hover:underline cursor-pointer"
+                    >
+                        Login
+                    </span>
+                </p>
+
             </div>
         </div>
     )
