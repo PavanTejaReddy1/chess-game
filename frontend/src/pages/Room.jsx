@@ -281,35 +281,6 @@ function Room() {
         );
     }
 
-    if (loading) {
-        return (
-            <div className="flex flex-col justify-center items-center h-screen text-white">
-
-                <h1 className="text-4xl font-bold mb-6 animate-pulse">
-                    ♟️ Chess Arena
-                </h1>
-
-                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mb-6"></div>
-
-                <p className="text-lg text-white/70">
-                    Setting up your game...
-                </p>
-
-                <div className="mt-10 grid grid-cols-8 gap-1 opacity-50">
-                    {Array.from({ length: 64 }).map((_, i) => (
-                        <div
-                            key={i}
-                            className={`w-8 h-8 ${(Math.floor(i / 8) + i) % 2 === 0
-                                    ? "bg-white/20"
-                                    : "bg-black/20"
-                                }`}
-                        ></div>
-                    ))}
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="flex justify-center items-center mt-2 w-full">
             <div className="w-[80vw]">
