@@ -31,61 +31,45 @@ function Room() {
     const [showReady, setShowReady] = useState(false);
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
+    const [loading, setLoading] = useState(true);
 
     const guest = JSON.parse(localStorage.getItem("guest"));
     const user = useSelector((state) => state.auth.user) || { _id: guest?.id, name: guest?.name };
     const navigate = useNavigate();
 
     useEffect(() => {
+        let isMounted = true;
+
+        setLoading(true);
+        setRoom(null);
+        setFen(null);
+        setTurn(null);
+        setMessages([]);
+        setText("");
+
         connectSocket();
 
         socket.emit("room:join", roomCode, (response) => {
-            if (!response?.ok)
-                return (toast(response?.message, {
-                    position: "top-left",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light"
-                }) || "Failed to join room");
+            if (!isMounted) return;
 
+            if (!response?.ok) {
+                toast(response?.message || "Room not found");
+                navigate("/lobby");
+                return;
+            }
 
             setRoom(response.room);
 
-            setColor(
-                user._id.toString() === response.room?.whiteId?.toString()
-                    ? "White"
-                    : "Black"
-            );
+            socket.emit("game:state", roomCode, (res) => {
+                if (!isMounted) return;
 
-            setWhiteMs(response?.clock?.whiteMs);
-            setBlackMs(response?.clock?.blackMs);
-        });
+                if (!res?.ok) return;
 
-        socket.emit("game:state", roomCode, (response) => {
-            if (!response?.ok)
-                return (toast.error(response?.message, {
-                    position: "top-left",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: false,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light"
-                }) || "Failed to fetch game state");
+                setFen(res.state.fen);
+                setTurn(res.state.turn);
 
-            setFen(response?.state?.fen);
-            setTurn(response?.state?.turn);
-
-            setColor(
-                user._id.toString() === response?.state?.whiteId?.toString()
-                    ? "White"
-                    : "Black"
-            );
+                setLoading(false);
+            });
         });
 
         const onPresence = (data) => {
@@ -154,8 +138,9 @@ function Room() {
             socket.off("game:over", onEnd);
             socket.off("clock:update", onClock);
             socket.off("chat:message", onMessage);
+            isMounted = false;
         };
-    }, [roomCode, room?.whiteId, user._id]);
+    }, [roomCode]);
 
     function leaveRoom() {
         socket.emit("room:leave", roomCode, (response) => {
@@ -286,6 +271,43 @@ function Room() {
                 <button className="text-white w-[200px] mb-4 flex gap-1 items-center justify-center bg-red-500/80 font-bold p-1 rounded-xl hover:bg-red-600 cursor-pointer" onClick={leaveRoom}><IoExitOutline size={20} />Leave Room</button>
             );
         }
+    }
+
+    if (!room) {
+        return (
+            <div className="flex justify-center items-center h-screen text-white text-2xl">
+                Loading room...
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div className="flex flex-col justify-center items-center h-screen text-white">
+
+                <h1 className="text-4xl font-bold mb-6 animate-pulse">
+                    ♟️ Chess Arena
+                </h1>
+
+                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mb-6"></div>
+
+                <p className="text-lg text-white/70">
+                    Setting up your game...
+                </p>
+
+                <div className="mt-10 grid grid-cols-8 gap-1 opacity-50">
+                    {Array.from({ length: 64 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className={`w-8 h-8 ${(Math.floor(i / 8) + i) % 2 === 0
+                                    ? "bg-white/20"
+                                    : "bg-black/20"
+                                }`}
+                        ></div>
+                    ))}
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -497,7 +519,7 @@ function Room() {
                                 <hr className="border w-full border-white/30 m-2" />
                             </div>
                             <div className="flex gap-2 justify-center items-center">
-                                
+
                                 <input
                                     value={text}
                                     onChange={(e) => setText(e.target.value)}

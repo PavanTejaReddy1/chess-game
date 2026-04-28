@@ -14,6 +14,7 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import Guest from './pages/Guest';
 import { ToastContainer } from 'react-toastify';
+import Home from './pages/Home';
 
 function App() {
 
@@ -31,6 +32,7 @@ function App() {
           <Routes>
             <Route path='/' element={<Navbar />}>
 
+              <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/guest" element={<Guest />} />
