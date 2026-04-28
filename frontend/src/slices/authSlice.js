@@ -1,55 +1,79 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { api } from "../api/client";
+import { socket } from "../socket";
 
 const initialState = {
-    user: null,
-    status: "idle",
-    error: null
+  user: null,
+  status: "idle", 
+  error: null,
+  isAuthChecked: false,
 };
 
 export const login = createAsyncThunk(
-    "auth/login",
-    async({ eamil, password }, thunkAPI) => {
-        try {
-            const res = await api.post("auth/login", { eamil, password });
-            return res.data;
-        } catch(err) {
-            return thunkAPI.rejectWithValue(err.message || "Login failed");
-        }
+  "auth/login",
+  async ({ email, password }) => {
+    try {
+      localStorage.clear();
+      socket.disconnect();
+      const res = await api.post("/auth/login", { email, password });
+      return res.data;
+    } catch (err) {
+      return err.message || "Login failed";
     }
-)
+  },
+);
 
 export const signup = createAsyncThunk(
-    "auth/signup",
-    async({ name, eamil, password }, thunkAPI) => {
-        try {
-            const res = await api.post("auth/signup", { name, eamil, password });
-            return res.data;
-        } catch(err) {
-            return thunkAPI.rejectWithValue(err.message || "Signup failed");
-        }
+  "auth/signup",
+  async ({ name, email, password }, thunkAPI) => {
+    try {
+      const res = await api.post("/auth/signup", { name, email, password });
+      return res.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.message || "Signup failed");
     }
-)
+  },
+);
 
-export const logout = createAsyncThunk(
-    "auth/logout",
-    async(_, thunkAPI) => {
-        try {
-            const res = await api.post("auth/logout");
-            return res.data;
-        } catch(err) {
-            return thunkAPI.rejectWithValue(err.message || "Logout failed");
-        }
-    }
-)
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+  localStorage.clear();
+  try {
+    socket.disconnect();
+    const res = await api.post("/auth/logout");
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.message || "Logout failed");
+  }
+});
+
+export const fetchMe = createAsyncThunk("auth/me", async (_, thunkAPI) => {
+  try {
+    const res = await api.get("/auth/me");
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.message || "Fetch me failed");
+  }
+});
+
+export const refresh = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
+  try {
+    const res = await api.post("/auth/refresh");
+    return res.data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(err.message || "Refresh failed");
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setUser(state, action) {
+      state.user = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     function pending(state) {
-      state.user = null;
       state.status = "pending";
       state.error = null;
     }
@@ -68,9 +92,30 @@ const authSlice = createSlice({
       .addCase(login.rejected, rejected)
       .addCase(signup.pending, pending)
       .addCase(signup.fulfilled, fulfilled)
-      .addCase(signup.rejected, rejected);
+      .addCase(signup.rejected, rejected)
+      .addCase(logout.pending, pending)
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.status = "success";
+        state.error = null;
+      })
+      .addCase(logout.rejected, rejected)
+      .addCase(fetchMe.pending, pending)
+      .addCase(fetchMe.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.status = "success";
+        state.error = null;
+        state.isAuthChecked = true;
+      })
+      .addCase(fetchMe.rejected, (state, action) => {
+        state.error = action.payload;
+        state.status = "error";
+        state.user = null;
+        state.isAuthChecked = true;
+      });
   },
 });
 
+export const { setUser } = authSlice.actions;
 const authReducer = authSlice.reducer;
 export { authReducer };

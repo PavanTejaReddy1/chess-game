@@ -1,1 +1,22 @@
 @import "tailwindcss";
+
+@import "tailwindcss";
+
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+
+  background-image: url("https://img.freepik.com/free-photo/digital-art-style-abstract-chess-pieces_23-2151476069.jpg?semt=ais_hybrid&w=740&q=80");
+
+  background-size: cover;        
+  background-position: bottom;     
+  background-repeat: no-repeat;   
+  background-attachment: fixed;
+
+  overflow: hidden;
+
+  color: #fff;
+}
+

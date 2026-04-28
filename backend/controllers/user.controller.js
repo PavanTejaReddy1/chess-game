@@ -94,9 +94,6 @@ const fetchMe = async (req, res) => {
     }
 }
 
-<<<<<<< HEAD
-module.exports = { login, signup, fetchMe }
-=======
 const logout = (req, res) => {
     try {
         res.clearCookie("accessToken", {
@@ -121,7 +118,7 @@ const refresh = async (req, res) => {
         const { refreshToken } = req.cookies;
 
         if (!refreshToken) {
-            res.status(400).json({ message: "Refresh token missing" });
+            return res.status(400).json({ message: "Refresh token missing" });
         }
 
         const payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
@@ -162,4 +159,4 @@ const refresh = async (req, res) => {
 }
 
 module.exports = { login, signup, fetchMe, logout, refresh }
->>>>>>> e1617b3 (Implemented redux part)
+
