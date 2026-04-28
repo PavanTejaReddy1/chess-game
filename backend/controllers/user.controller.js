@@ -30,20 +30,22 @@ const login = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true, //javascrip can not read the cookie only browser can read it
-            secure: process.env.NODE_ENV = "production", //send cookie only to https secure sites
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None", //send cookie only to https secure sites
             maxAge: 15 * 60 * 1000
         })
 
         const refreshToken = jwt.sign(
-            { sub: user._id, role: user.role },
+            { sub: user._id, role: user.role, type: "refresh" },
             process.env.JWT_REFRESH_SECRET,
-            { expiresIn: "7d" },
+            { expiresIn: "7d" }
         );
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true, //javascrip can not read the cookie only browser can read it
-            secure: process.env.NODE_ENV = "production", //send cookie only to https secure sites
-            path: "api/v1/auth/refresh",
+            secure: process.env.NODE_ENV === "production", //send cookie only to https secure sites
+            path: "/api/v1/auth/refresh",
+            sameSite: "None",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -104,7 +106,7 @@ const logout = (req, res) => {
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: process.env.NODE_ENV = "production",
-            path: "api/v1/auth/refresh",
+            path: "/api/v1/auth/refresh",
         });
 
         return res.status(200).json({ message: "OK" });
@@ -128,13 +130,13 @@ const refresh = async (req, res) => {
         }
 
         const id = payload.sub;
-        const user = User.findById(id);
+        const user = await User.findById(id);
 
         if (!user) {
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: process.env.NODE_ENV = "production",
-                path: "api/v1/auth/refresh",
+                path: "/api/v1/auth/refresh",
             });
 
             return res.status(400).json({ message: "User not found" });
@@ -153,7 +155,7 @@ const refresh = async (req, res) => {
         });
 
         return res.status(200).json({ message: "OK" });
-    } catch(err) {
+    } catch (err) {
         return res.status(500).json({ message: err.message });
     }
 }
