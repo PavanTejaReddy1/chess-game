@@ -10,7 +10,7 @@ function Signup() {
     const navigate = useNavigate();
 
     async function handleSubmit(e) {
-        e.preventDefault;
+        e.preventDefault();
 
         const formData = new FormData(e.target);
 
