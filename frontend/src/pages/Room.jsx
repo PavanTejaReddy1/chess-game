@@ -509,36 +509,39 @@ function Room() {
                     </div>
                 }
 
-                {gameResult && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-                        <div className="w-full max-w-md rounded-2xl border border-white/30 bg-slate-950/95 p-6 text-center shadow-2xl">
-                            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Game Over</p>
-                            <h2 className="mt-3 text-3xl font-bold text-white">{getResultTitle(gameResult)}</h2>
-                            <p className="mt-2 text-white/70">
-                                {gameResult.result === "draw"
-                                    ? "Both players shared the point."
-                                    : `${gameResult.winnerName || gameResult.winnerColor || "Winner"} won by ${gameResult.reason || "game result"}.`}
-                            </p>
-                            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                                <button
-                                    onClick={restartGame}
-                                    className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-semibold text-white transition hover:bg-blue-600 cursor-pointer"
-                                >
-                                    Restart
-                                </button>
-                                <button
-                                    onClick={leaveRoom}
-                                    className="flex-1 rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20 cursor-pointer"
-                                >
-                                    Exit Game
-                                </button>
+                <div>
+                    {gameResult && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+                            <div className="w-full max-w-md rounded-2xl border border-white/30 bg-slate-950/95 p-6 text-center shadow-2xl">
+                                <p className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-300">Game Over</p>
+                                <h2 className="mt-3 text-3xl font-bold text-white">{getResultTitle(gameResult)}</h2>
+                                <p className="mt-2 text-white/70">
+                                    {gameResult.result === "draw"
+                                        ? "Both players shared the point."
+                                        : `${gameResult.winnerName || gameResult.winnerColor || "Winner"} won by ${gameResult.reason || "game result"}.`}
+                                </p>
+                                <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                                    <button
+                                        onClick={restartGame}
+                                        className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-semibold text-white transition hover:bg-blue-600 cursor-pointer"
+                                    >
+                                        Restart
+                                    </button>
+                                    <button
+                                        onClick={leaveRoom}
+                                        className="flex-1 rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20 cursor-pointer"
+                                    >
+                                        Exit Game
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
 
+                </div>
             </div>
         </div>
+
     );
 }
 
