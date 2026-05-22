@@ -3,6 +3,7 @@ import { connectSocket, socket } from "../socket";
 import { useNavigate } from "react-router-dom";
 import { MdLogin } from "react-icons/md";
 import { FaLightbulb } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Lobby() {
     const [roomCode, setRoomCode] = useState("");
@@ -11,7 +12,7 @@ function Lobby() {
     function createRoom() {
         connectSocket();
         socket.emit("room:create", (response) => {
-            if (!response?.ok) return alert(response.message);
+            if (!response?.ok) return toast.error(response.message || "Failed to create room");
             navigate(`/rooms/${response.room.roomCode}`);
         });
     }
@@ -20,7 +21,7 @@ function Lobby() {
         connectSocket();
         socket.emit("room:join", roomCode, (response) => {
             if (!response?.ok)
-                return alert(response.message || "Failed to join room");
+                return toast.error(response.message || "Failed to join room");
             navigate(`/rooms/${response.room.roomCode}`);
         });
     }

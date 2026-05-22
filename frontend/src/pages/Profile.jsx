@@ -4,6 +4,7 @@ import { api } from "../api/client";
 import { setUser } from "../slices/authSlice"; 
 import { TbUserEdit } from "react-icons/tb";
 import { VscClose } from "react-icons/vsc";
+import { toast } from "react-toastify";
 
 function Profile() {
   const { user } = useSelector((state) => state.auth);
@@ -27,7 +28,7 @@ function Profile() {
     e.preventDefault();
 
     if (!file) {
-      alert("Please select a file");
+      toast.info("Please select a file");
       return;
     }
 
@@ -51,9 +52,9 @@ function Profile() {
       setPreview(null);
       setFile(null);
 
-      alert("Upload successful!");
+      toast.success("Upload successful");
     } catch (err) {
-      alert(err.message);
+      toast.error(err.message || "Upload failed");
     } finally {
       setLoading(false);
     }

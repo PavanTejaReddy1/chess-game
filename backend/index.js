@@ -124,6 +124,22 @@ function getPubliClock(room) {
   };
 }
 
+function getGameOverPayload(room, result, reason) {
+  const winnerColor = result === "white" || result === "black" ? result : null;
+  const winnerId = winnerColor === "white" ? room.whiteId : winnerColor === "black" ? room.blackId : null;
+  const winner = winnerId
+    ? room.players.find((p) => p.userId.toString() === winnerId.toString())
+    : null;
+
+  return {
+    result,
+    reason,
+    winnerColor,
+    winnerId,
+    winnerName: winner?.name || null,
+  };
+}
+
 function getRoomCode(len = 6) {
   let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let code = "";
@@ -220,6 +236,7 @@ io.on("connection", (socket) => {
         whiteId: null,
         blackId: null,
         lastMove: null,
+        messages: [],
       };
       socket.join(roomCode);
       newRoom.players.push({
@@ -330,6 +347,52 @@ io.on("connection", (socket) => {
     return ack?.({ ok: true, state: getPublicState(room), clock: getPubliClock(room) });
   });
 
+  socket.on("chat:history", (roomCode, ack) => {
+    try {
+      const room = rooms.get(roomCode);
+      if (!room) return ack?.({ ok: false, message: "Room does not exist" });
+
+      return ack?.({ ok: true, messages: room.messages || [] });
+    } catch (err) {
+      return ack?.({ ok: false, message: err.message || "Failed to fetch chat" });
+    }
+  });
+
+  socket.on("chat:send", (roomCode, text, ack) => {
+    try {
+      const room = rooms.get(roomCode);
+      if (!room) return ack?.({ ok: false, message: "Room does not exist" });
+
+      const isPlayer = room.players.some(
+        (p) => p.userId.toString() === socket.user._id.toString(),
+      );
+
+      if (!isPlayer) {
+        return ack?.({ ok: false, message: "Join the room to send messages" });
+      }
+
+      const messageText = String(text || "").trim();
+      if (!messageText) {
+        return ack?.({ ok: false, message: "Message cannot be empty" });
+      }
+
+      const message = {
+        id: `${Date.now()}-${socket.id}`,
+        userId: socket.user._id,
+        name: socket.user.name,
+        text: messageText,
+        createdAt: Date.now(),
+      };
+
+      room.messages = [...(room.messages || []), message].slice(-100);
+      io.to(roomCode).emit("chat:message", message);
+
+      return ack?.({ ok: true, message });
+    } catch (err) {
+      return ack?.({ ok: false, message: err.message || "Failed to send message" });
+    }
+  });
+
   socket.on("game:move", async (roomCode, from, to, promotion, ack) => {
     try {
       const room = rooms.get(roomCode);
@@ -380,7 +443,7 @@ io.on("connection", (socket) => {
         room.clock.running = false;
         const result = room.clock.whiteMs === 0 ? "black" : "white";
         const reason = "timeout";
-        io.to(roomCode).emit("game:over", result);
+        io.to(roomCode).emit("game:over", getGameOverPayload(room, result, reason));
 
         const guest = room.players.some((p) => p.role === "guest");
         if (guest) {
@@ -413,7 +476,7 @@ io.on("connection", (socket) => {
           result = "draw";
           reason = "draw";
         }
-        io.to(roomCode).emit("game:over", result);
+        io.to(roomCode).emit("game:over", getGameOverPayload(room, result, reason));
 
         if (socket.user.role === "guest") {
           return;

@@ -14,6 +14,7 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import Guest from './pages/Guest';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from './pages/Home';
 
 function App() {
@@ -48,7 +49,17 @@ function App() {
           </Routes>
         </div>
 
-        <ToastContainer />
+        <ToastContainer
+          position="top-right"
+          autoClose={2500}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </div>
 
     </SnackbarProvider>

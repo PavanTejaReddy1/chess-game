@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { fetchMe, login } from "../slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { enqueueSnackbar } from 'notistack';
+import { toast } from "react-toastify";
 
 function Login() {
     const dispatch = useDispatch();
@@ -20,9 +20,9 @@ function Login() {
             await dispatch(fetchMe()).unwrap();
 
             navigate("/lobby");
-            enqueueSnackbar("Login successfull", { varient: "success" });
+            toast.success("Login successful");
         } catch (err) {
-            enqueueSnackbar(err.message, { varient: "error" });
+            toast.error(err.message || "Login failed");
         }
     }
 
