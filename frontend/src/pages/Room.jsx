@@ -392,7 +392,7 @@ function Room() {
                         </div>
                     </>
                     :
-                    <div className="flex flex-col gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
+                    <div className="flex flex-col items-center justify-center gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
                         <div className="flex flex-col gap-5 xl:order-1">
                             <div className="flex justify-between w-full">
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:flex-col xl:items-start">
@@ -408,7 +408,7 @@ function Room() {
 
                             <hr className="p-1 w-full text-white/50 rounded-xl" />
 
-                            <div className="flex flex-col items-center justify-center gap-5">
+                            <div className="flex flex-col gap-5">
                                 <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-4 sm:p-6">
                                     <p className="flex items-center gap-1 text-xl font-bold m-2"><MdPeople size={30} />Players {room?.players.length === 1 ? "(1/2)" : "(2/2)"}</p>
                                     <ul className="space-y-2">
