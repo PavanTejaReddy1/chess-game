@@ -38,7 +38,7 @@ function Lobby() {
                 </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 mt-8 sm:mt-12 w-full max-w-5xl">
+            <div className="flex flex-col items-center justify-center sm:flex-row items-center gap-6 sm:gap-8 mt-8 sm:mt-12 w-full max-w-5xl">
 
                 <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-6 sm:p-8 w-full max-w-[380px] min-h-[320px] sm:h-[350px] flex flex-col items-center gap-5 transition-all duration-300 hover:scale-[1.03]">
 

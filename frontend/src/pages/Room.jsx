@@ -408,7 +408,7 @@ function Room() {
 
                             <hr className="p-1 w-full text-white/50 rounded-xl" />
 
-                            <div className="flex flex-col gap-5">
+                            <div className="flex flex-col items-center justify-center gap-5">
                                 <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-4 sm:p-6">
                                     <p className="flex items-center gap-1 text-xl font-bold m-2"><MdPeople size={30} />Players {room?.players.length === 1 ? "(1/2)" : "(2/2)"}</p>
                                     <ul className="space-y-2">
