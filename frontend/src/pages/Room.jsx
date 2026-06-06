@@ -392,7 +392,7 @@ function Room() {
                         </div>
                     </>
                     :
-                    <div className="flex flex-col items-center justify-center gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
+                    <div className="flex flex-col gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
                         <div className="flex flex-col gap-5 xl:order-1">
                             <div className="flex justify-between w-full">
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:flex-col xl:items-start">
