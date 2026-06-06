@@ -27,28 +27,28 @@ function Lobby() {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center mt-10">
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8 sm:px-6">
 
-            <div className="flex flex-col text-center gap-2">
-                <h1 className="text-5xl font-bold text-white drop-shadow-lg">
+            <div className="flex flex-col text-center gap-2 max-w-4xl">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white drop-shadow-lg">
                     Welcome to Chess Arena ♟️
                 </h1>
-                <p className="text-lg text-white/80">
+                <p className="text-base sm:text-lg text-white/80">
                     Create a room or join an existing one to start playing
                 </p>
             </div>
 
-            <div className="flex items-center gap-8 mt-12">
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 mt-8 sm:mt-12 w-full max-w-5xl">
 
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-8 w-[380px] h-[350px] flex flex-col items-center gap-5 transition-all duration-300 hover:scale-[1.03]">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-6 sm:p-8 w-full max-w-[380px] min-h-[320px] sm:h-[350px] flex flex-col items-center gap-5 transition-all duration-300 hover:scale-[1.03]">
 
                     <div className="bg-white/20 text-blue-400 h-10 w-10 p-8 text-3xl flex justify-center items-center rounded-full shadow-lg">
                         +
                     </div>
 
                     <div className="text-center">
-                        <p className="text-3xl text-blue-400 font-bold">Create Room</p>
-                        <p className=" text-white/70 mt-2">
+                        <p className="text-2xl sm:text-3xl text-blue-400 font-bold">Create Room</p>
+                        <p className="text-sm sm:text-base text-white/70 mt-2">
                             Start a new game and share the room code with your opponent.
                         </p>
                     </div>
@@ -61,17 +61,18 @@ function Lobby() {
                     </button>
                 </div>
 
-                <p className="text-white/60 font-semibold">OR</p>
+                <p className="text-white/60 font-semibold text-lg sm:hidden">OR</p>
+                <p className="text-white/60 font-semibold hidden sm:block">OR</p>
 
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-8 w-[380px] h-[350px] flex flex-col items-center gap-4 transition-all duration-300 hover:scale-[1.03]">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-6 sm:p-8 w-full max-w-[380px] min-h-[320px] sm:h-[350px] flex flex-col items-center gap-4 transition-all duration-300 hover:scale-[1.03]">
 
                     <div className="bg-white/20 p-5 rounded-full shadow-lg text-green-400">
                         <MdLogin size={30} />
                     </div>
 
                     <div className="text-center">
-                        <p className="text-3xl text-green-400 font-bold">Join Room</p>
-                        <p className="text text-white/70 mt-2">
+                        <p className="text-2xl sm:text-3xl text-green-400 font-bold">Join Room</p>
+                        <p className="text-sm sm:text-base text-white/70 mt-2">
                             Enter a room code to join existing game.
                         </p>
                     </div>
@@ -93,37 +94,37 @@ function Lobby() {
                 </div>
             </div>
 
-            <div className="w-[60vw] mt-16 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl text-white shadow-xl">
+            <div className="w-full max-w-4xl mt-8 sm:mt-16 bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl text-white shadow-xl">
 
-                <p className="flex gap-1 text-xl mb-4 ml-12 items-center">
+                <p className="flex gap-1 text-lg sm:text-xl mb-4 ml-0 sm:ml-12 items-center">
                     <FaLightbulb /> How it Works ?
                 </p>
 
-                <div className="flex justify-evenly">
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-8">
 
                     <div className="flex items-center gap-2">
-                        <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full font-bold">
+                        <div className="bg-blue-500 w-8 h-8 flex items-center justify-center rounded-full font-bold shrink-0">
                             1
                         </div>
-                        Create or join the room
+                        <span className="text-sm sm:text-base">Create or join the room</span>
                     </div>
 
-                    <p className="text-3xl text-white/30">|</p>
+                    <p className="text-2xl sm:text-3xl text-white/30 hidden sm:block">|</p>
 
                     <div className="flex items-center gap-2">
-                        <div className="bg-green-500 w-8 h-8 flex items-center justify-center rounded-full font-bold">
+                        <div className="bg-green-500 w-8 h-8 flex items-center justify-center rounded-full font-bold shrink-0">
                             2
                         </div>
-                        Wait for an opponent
+                        <span className="text-sm sm:text-base">Wait for an opponent</span>
                     </div>
 
-                    <p className="text-3xl text-white/30">|</p>
+                    <p className="text-2xl sm:text-3xl text-white/30 hidden sm:block">|</p>
 
                     <div className="flex items-center gap-2">
-                        <div className="bg-violet-500 w-8 h-8 flex items-center justify-center rounded-full font-bold">
+                        <div className="bg-violet-500 w-8 h-8 flex items-center justify-center rounded-full font-bold shrink-0">
                             3
                         </div>
-                        Play chess in real time
+                        <span className="text-sm sm:text-base">Play chess in real time</span>
                     </div>
 
                 </div>

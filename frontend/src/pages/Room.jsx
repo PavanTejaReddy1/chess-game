@@ -148,8 +148,34 @@ function Room() {
         });
     }
 
-    function onDrop(sourceSquare, targetSquare) {
+    function getMoveErrorMessage(message) {
+        if (!message) return "Invalid move";
+        
+        const msg = String(message).toLowerCase();
+        
+        if (msg.includes("check") || msg.includes("king")) {
+            return "Move not allowed. Your king would be in check.";
+        }
+        if (msg.includes("turn") || msg.includes("not your")) {
+            return "It's not your turn.";
+        }
+        if (msg.includes("pawn") && (msg.includes("forward") || msg.includes("empty"))) {
+            return "Invalid move. Pawns can only move forward to an empty square.";
+        }
+        if (msg.includes("piece") || msg.includes("cannot")) {
+            return "This piece cannot move to the selected square.";
+        }
+        if (msg.includes("select") || msg.includes("own")) {
+            return "Please select one of your own pieces.";
+        }
+        if (msg.includes("{") && msg.includes("}")) {
+            return "Invalid move. Please try again.";
+        }
+        
+        return "Invalid move. Please try again.";
+    }
 
+    function onDrop(sourceSquare, targetSquare) {
         if (!fen) return false;
         socket.emit(
             "game:move",
@@ -158,7 +184,10 @@ function Room() {
             targetSquare,
             "q",
             (response) => {
-                if (!response?.ok) return toast.info(response?.message || "Invalid move");
+                if (!response?.ok) {
+                    const userMessage = getMoveErrorMessage(response?.message);
+                    toast.error(userMessage);
+                }
             },
         );
 
@@ -248,13 +277,13 @@ function Room() {
     function gameStatus() {
         if (showReady) {
             return (
-                <p className="text-green-900 w-[300px] mb-4 flex gap-1 items-center justify-center bg-green-400 font-bold p-1 rounded-xl animate-pulse">
+                <p className="text-green-900 w-full max-w-[300px] mb-4 flex gap-1 items-center justify-center bg-green-400 font-bold p-1 rounded-xl animate-pulse">
                     ✓ Ready to Play
                 </p>
             );
         } else {
             return (
-                <button className="text-white w-[200px] mb-4 flex gap-1 items-center justify-center bg-red-500/80 font-bold p-1 rounded-xl hover:bg-red-600 cursor-pointer" onClick={leaveRoom}><IoExitOutline size={20} />Leave Room</button>
+                <button className="text-white w-full max-w-[200px] mb-4 flex gap-1 items-center justify-center bg-red-500/80 font-bold p-1 rounded-xl hover:bg-red-600 cursor-pointer" onClick={leaveRoom}><IoExitOutline size={20} />Leave Room</button>
             );
         }
     }
@@ -289,8 +318,8 @@ function Room() {
 
                         <hr className="p-1 w-full text-white/50 rounded-xl" />
 
-                        <div className="flex flex-col gap-3 lg:flex-row">
-                            <div className="flex w-full flex-col gap-5 lg:w-[400px] lg:shrink-0">
+                        <div className="flex flex-col gap-4 lg:flex-row">
+                            <div className="flex w-full flex-col gap-5 lg:w-full lg:max-w-[400px] lg:shrink-0">
                                 <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-4 sm:p-6">
                                     <p className="flex items-center gap-1 text-xl font-bold m-2"><MdPeople size={30} />Players {room?.players.length === 1 ? "(1/2)" : "(2/2)"}</p>
                                     <ul className="space-y-2">
@@ -322,7 +351,7 @@ function Room() {
                                     </ul>
                                 </div>
 
-                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-[400px] p-6">
+                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-6">
                                     <p className="flex gap-2 items-center font-bold text-white/80 text-xl"><CiCircleAlert size={30} /> Room Info</p>
                                     <span className="flex justify-between items-center mt-2 text-lg text-white/80">
                                         <p className="pl-2"># Room Code</p>
@@ -363,8 +392,8 @@ function Room() {
                         </div>
                     </>
                     :
-                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
-                        <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
+                        <div className="flex flex-col gap-5 xl:order-1">
                             <div className="flex justify-between w-full">
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:flex-col xl:items-start">
                                     <IoPeopleCircleOutline className="text-6xl sm:text-7xl lg:text-[90px]" />
@@ -411,7 +440,7 @@ function Room() {
                                     </ul>
                                 </div>
 
-                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-[400px] p-6">
+                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-6">
                                     <p className="flex gap-2 items-center font-bold text-white/80 text-xl"><CiCircleAlert size={30} /> Room Info</p>
                                     <span className="flex justify-between items-center mt-2 text-lg text-white/80">
                                         <p className="pl-2"># Room Code</p>
@@ -435,7 +464,7 @@ function Room() {
                             </div>
                         </div>
 
-                        <div className="w-full bg-white/10 p-2 rounded-xl shadow-xl border border-white/50">
+                        <div className="w-full bg-white/10 p-2 rounded-xl shadow-xl border border-white/50 xl:order-2">
                             <div className="flex flex-col gap-3 justify-between p-2 sm:flex-row sm:items-center">
                                 <div className="flex justify-center items-center gap-1 font-bold text-white/80 text-base"><FaRegCircle size={20} />Turn:{" "}
                                     {turn
@@ -464,13 +493,13 @@ function Room() {
                                 </div>
                             </div>
 
-                            <div className="mx-auto w-full max-w-[600px]">
+                            <div className="mx-auto w-full max-w-[600px] aspect-square">
                                 <Chessboard id="room-board" position={fen || "start"} onPieceDrop={onDrop} />
                             </div>
 
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-lg p-4 flex flex-col items-center shadow-xl border border-white/50 rounded-xl w-full min-h-[420px] xl:h-[500px]">
+                        <div className="bg-white/10 backdrop-blur-lg p-4 flex flex-col items-center shadow-xl border border-white/50 rounded-xl w-full min-h-[420px] xl:h-[500px] xl:order-3">
                             <div className="flex flex-col justify-center items-center w-full">
                                 <p className="text-lg font-bold text-white/85">Chat box</p>
                                 <hr className="border w-full border-white/30 m-2" />
