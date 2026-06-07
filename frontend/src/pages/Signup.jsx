@@ -25,7 +25,7 @@ function Signup() {
             navigate("/lobby");
             toast.success("Signup successful");
         } catch (err) {
-            toast.error(err.message || "Signup failed");
+            toast.error(err.message);
         }
     }
 
