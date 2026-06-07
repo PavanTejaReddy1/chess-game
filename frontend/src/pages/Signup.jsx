@@ -33,14 +33,10 @@ function Signup() {
             navigate("/lobby");
             toast.success("Account created successfully");
         } catch (err) {
-<<<<<<< HEAD
-            toast.error(err.message);
-=======
             const errorMessage = err || "Signup failed. Please try again.";
             toast.error(errorMessage);
         } finally {
             setLoading(false);
->>>>>>> 9a7118a (Fix authentication flow and error handling)
         }
     }
 

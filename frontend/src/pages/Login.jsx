@@ -25,14 +25,10 @@ function Login() {
             navigate("/lobby");
             toast.success("Login successful");
         } catch (err) {
-<<<<<<< HEAD
-            toast.error(err.message);
-=======
-            const errorMessage = err || "Login failed. Please try again.";
+            const errorMessage = err.message || "Login failed. Please try again.";
             toast.error(errorMessage);
         } finally {
             setLoading(false);
->>>>>>> 9a7118a (Fix authentication flow and error handling)
         }
     }
 
