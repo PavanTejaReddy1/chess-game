@@ -7,19 +7,19 @@ const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ message: "Please fill all the details" });
+            return res.status(400).json({ message: "Email and password are required" });
         }
 
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ message: "User not found" });
+            return res.status(401).json({ message: "Invalid email or password" });
         }
 
         const match = await bcrypt.compare(password, user.passwordHash);
 
         if (!match) {
-            return res.status(400).json({ message: "Invalid password" });
+            return res.status(401).json({ message: "Invalid email or password" });
         }
 
         const accessToken = jwt.sign(
@@ -29,9 +29,9 @@ const login = async (req, res) => {
         );
 
         res.cookie("accessToken", accessToken, {
-            httpOnly: true, //javascrip can not read the cookie only browser can read it
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "None", //send cookie only to https secure sites
+            sameSite: "None",
             maxAge: 15 * 60 * 1000
         })
 
@@ -42,8 +42,8 @@ const login = async (req, res) => {
         );
 
         res.cookie("refreshToken", refreshToken, {
-            httpOnly: true, //javascrip can not read the cookie only browser can read it
-            secure: process.env.NODE_ENV === "production", //send cookie only to https secure sites
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
             path: "/api/v1/auth/refresh",
             sameSite: "None",
             maxAge: 7 * 24 * 60 * 60 * 1000
@@ -52,7 +52,8 @@ const login = async (req, res) => {
         res.status(200).json({ message: "OK" });
 
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error("Login error:", err);
+        res.status(500).json({ message: "Server error. Please try again later." });
     }
 }
 
@@ -61,13 +62,17 @@ const signup = async (req, res) => {
         const { name, email, password } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).json({ message: "Please fill all the details" });
+            return res.status(400).json({ message: "Full name, email, and password are required" });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ message: "Password must be at least 6 characters" });
         }
 
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
+            return res.status(409).json({ message: "Email already registered" });
         }
 
         const saltRounds = 10;
@@ -77,12 +82,40 @@ const signup = async (req, res) => {
         const savedUser = await user.save();
 
         if (!savedUser) {
-            return res.status(500).json({ message: "Unable to save the user" });
+            return res.status(500).json({ message: "Unable to create account" });
         }
+        
+        const accessToken = jwt.sign(
+            { sub: savedUser._id, role: savedUser.role },
+            process.env.JWT_ACCESS_SECRET,
+            { expiresIn: "15m" },
+        );
 
-        return res.status(200).json({ message: "OK" });
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
+            maxAge: 15 * 60 * 1000
+        })
+
+        const refreshToken = jwt.sign(
+            { sub: savedUser._id, role: savedUser.role, type: "refresh" },
+            process.env.JWT_REFRESH_SECRET,
+            { expiresIn: "7d" }
+        );
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            path: "/api/v1/auth/refresh",
+            sameSite: "None",
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        })
+
+        return res.status(201).json({ message: "Account created successfully" });
     } catch (err) {
-        return res.json(500).json({ message: err.message });
+        console.error("Signup error:", err);
+        return res.status(500).json({ message: "Server error. Please try again later." });
     }
 }
 
