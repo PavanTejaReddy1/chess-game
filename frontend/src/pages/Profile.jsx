@@ -118,9 +118,6 @@ function Profile() {
             {user?.name || "User Name"}
           </h2>
           <p className="text-white/70 text-sm sm:text-base">{user?.email}</p>
-          <p className="text-white/50 text-xs sm:text-sm mt-1">
-            Joined: {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}
-          </p>
         </div>
 
         <button
@@ -177,7 +174,7 @@ function Profile() {
           <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">🎯Win Rate</p>
           <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">
             {user?.stats?.gamesPlayed > 0 
-              ? Math.round((user.stats.wins / user.stats.gamesPlayed) * 100) + '%' 
+              ? Math.round((user?.stats?.wins / user?.stats?.gamesPlayed) * 100) + '%' 
               : '0%'}
           </p>
         </div>

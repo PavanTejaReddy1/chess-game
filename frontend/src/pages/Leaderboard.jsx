@@ -68,15 +68,15 @@ function Leaderboard() {
     }
 
     return (
-        <div className="flex flex-col mx-auto shadow-xl rounded-2xl p-4 sm:p-6 w-full max-w-6xl mt-8 sm:mt-10">
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
+        <div className="flex flex-col mx-auto shadow-xl rounded-2xl p-4 sm:p-6 w-full max-w-6xl mt-8 sm:mt-10 max-h-[80vh]">
+            <div className="flex flex-col sm:flex-row gap-4 items-center shrink-0">
                 <p className="bg-blue-500/50 p-3 sm:p-4 rounded-xl backdrop-blur-sm"><TfiCup size={40} sm:size={50}/></p>
                 <div className="text-center sm:text-left"> 
                     <p className="text-3xl sm:text-4xl text-white/90">Leaderboard</p>
                     <p className="text-base sm:text-xl text-white/90">Top players ranked by performance</p>
                 </div>
             </div>
-            <div className="rounded-xl overflow-hidden mt-6">
+            <div className="rounded-xl overflow-hidden mt-6 flex-1 overflow-y-auto">
                 <div className="overflow-x-auto">
                     <table className="text-center text-sm sm:text-lg w-full min-w-[600px]">
                         <thead>
@@ -92,7 +92,7 @@ function Leaderboard() {
                         </thead>
                         <tbody>
                             {data.map(u => (
-                                <tr key={u._id} className={`${user?.user?._id?.toString() === u._id.toString() ? `bg-yellow-500/50` : "bg-white/20 backdrop-blur-lg"} hover:bg-white/30 transition-colors`}>
+                                <tr key={u._id} className={`${user?._id?.toString() === u._id.toString() ? `bg-yellow-500/50` : "bg-white/20 backdrop-blur-lg"} hover:bg-white/30 transition-colors`}>
                                     <td className="p-2 sm:p-4 font-bold">{u.rank}</td>
                                     <td className="p-2 sm:p-4">{u.name}</td>
                                     <td className="p-2 sm:p-4">{u.stats?.wins || 0}</td>

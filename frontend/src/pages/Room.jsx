@@ -36,7 +36,7 @@ function Room() {
 
     const guest = JSON.parse(localStorage.getItem("guest"));
     const user = useSelector((state) => state.auth.user) || { _id: guest?.id, name: guest?.name };
-    const currentUserId = user?.user?._id || user?._id || guest?.id;
+    const currentUserId = user?._id || guest?.id;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -326,7 +326,7 @@ function Room() {
                                                     <li key={p.userId}>
                                                         <div className="flex gap-1">
                                                             <p className="font-bold text-lg">{p.name}</p>
-                                                            <p>{p.userId?.toString() === user?.user?._id?.toString() ? "(You)" : ""}{console.log(p)}</p>
+                                                            <p>{p.userId?.toString() === user?._id?.toString() ? "(You)" : ""}</p>
                                                         </div>
                                                         <p>color : {p.userId === room?.whiteId ? "White" : "Black"}</p>
                                                     </li>
@@ -415,7 +415,7 @@ function Room() {
                                                     <li key={p.userId}>
                                                         <div className="flex gap-1">
                                                             <p className="font-bold text-lg">{p.name}</p>
-                                                            <p>{p.userId?.toString() === user?.user?._id?.toString() ? "(You)" : ""}{console.log(p)}</p>
+                                                            <p>{p.userId?.toString() === user?._id?.toString() ? "(You)" : ""}</p>
                                                         </div>
                                                         <p>color : {p.userId === room?.whiteId ? "White" : "Black"}</p>
                                                     </li>

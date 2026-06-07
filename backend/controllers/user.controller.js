@@ -31,7 +31,7 @@ const login = async (req, res) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 15 * 60 * 1000
         })
 
@@ -45,7 +45,7 @@ const login = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             path: "/api/v1/auth/refresh",
-            sameSite: "None",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
@@ -94,7 +94,7 @@ const signup = async (req, res) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "None",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 15 * 60 * 1000
         })
 
@@ -108,7 +108,7 @@ const signup = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             path: "/api/v1/auth/refresh",
-            sameSite: "None",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 

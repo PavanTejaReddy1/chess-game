@@ -102,7 +102,7 @@ const authSlice = createSlice({
       .addCase(logout.rejected, rejected)
       .addCase(fetchMe.pending, pending)
       .addCase(fetchMe.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user || action.payload;
         state.status = "success";
         state.error = null;
         state.isAuthChecked = true;
