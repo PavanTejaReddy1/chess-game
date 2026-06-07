@@ -11,14 +11,14 @@ const initialState = {
 
 export const login = createAsyncThunk(
   "auth/login",
-  async ({ email, password }) => {
+  async ({ email, password }, thunkAPI) => {
     try {
       localStorage.clear();
       socket.disconnect();
       const res = await api.post("/auth/login", { email, password });
       return res.data;
     } catch (err) {
-      return err.message || "Login failed";
+      return thunkAPI.rejectWithValue(err.response?.data?.message || err.message || "Login failed");
     }
   },
 );
@@ -30,7 +30,7 @@ export const signup = createAsyncThunk(
       const res = await api.post("/auth/signup", { name, email, password });
       return res.data;
     } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || "Signup failed");
+      return thunkAPI.rejectWithValue(err.response?.data?.message || err.message || "Signup failed");
     }
   },
 );
