@@ -133,13 +133,15 @@ const logout = (req, res) => {
     try {
         res.clearCookie("accessToken", {
             httpOnly: true,
-            secure: process.env.NODE_ENV = "production",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "None",
         });
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: process.env.NODE_ENV = "production",
+            secure: process.env.NODE_ENV === "production",
             path: "/api/v1/auth/refresh",
+            sameSite: "None",
         });
 
         return res.status(200).json({ message: "OK" });
@@ -168,8 +170,9 @@ const refresh = async (req, res) => {
         if (!user) {
             res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: process.env.NODE_ENV = "production",
+                secure: process.env.NODE_ENV === "production",
                 path: "/api/v1/auth/refresh",
+                sameSite: "None",
             });
 
             return res.status(400).json({ message: "User not found" });
@@ -183,7 +186,7 @@ const refresh = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV = "production",
+            secure: process.env.NODE_ENV === "production",
             maxAge: 15 * 60 * 1000
         });
 

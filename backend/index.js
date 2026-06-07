@@ -517,8 +517,9 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(PORT, () => console.log("Server running at", PORT))
-
 mongoose.connect(process.env.MONGODB_URL)
-  .then(() => console.log("DB Connected"))
+  .then(() => {
+    console.log("DB Connected");
+    server.listen(process.env.PORT, () => console.log("Server running at", process.env.PORT));
+  })
   .catch((err) => console.log("Failed to connect DB", err))
