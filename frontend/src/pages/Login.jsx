@@ -22,7 +22,7 @@ function Login() {
             navigate("/lobby");
             toast.success("Login successful");
         } catch (err) {
-            toast.error(err.message || "Login failed");
+            toast.error(err.message);
         }
     }
 
