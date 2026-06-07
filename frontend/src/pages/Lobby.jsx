@@ -38,7 +38,7 @@ function Lobby() {
                 </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 mt-8 sm:mt-12 w-full max-w-5xl">
+            <div className="flex flex-col items-center justify-center sm:flex-row items-center gap-6 sm:gap-8 mt-8 sm:mt-12 w-full max-w-5xl">
 
                 <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.35)] rounded-2xl p-6 sm:p-8 w-full max-w-[380px] min-h-[320px] sm:h-[350px] flex flex-col items-center gap-5 transition-all duration-300 hover:scale-[1.03]">
 
@@ -94,7 +94,7 @@ function Lobby() {
                 </div>
             </div>
 
-            <div className="w-full max-w-4xl mt-8 sm:mt-16 bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl text-white shadow-xl">
+            <div className="flex flex-col items-center justify-center w-full max-w-4xl mt-8 sm:mt-16 bg-white/10 backdrop-blur-xl border border-white/20 p-4 sm:p-6 rounded-2xl text-white shadow-xl">
 
                 <p className="flex gap-1 text-lg sm:text-xl mb-4 ml-0 sm:ml-12 items-center">
                     <FaLightbulb /> How it Works ?

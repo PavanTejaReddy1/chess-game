@@ -23,6 +23,7 @@ const storage = new CloudinaryStorage({
 });
 
 const parser = multer({
+    //https://chess-game-ashy-ten.vercel.app
     storage: storage,
     fileFilter: function (req, file, cb) {
         let extArray = file.originalname.split("."); // originalName -> profile.images.jpeg -> extArray -> [profile, images, jpeg]

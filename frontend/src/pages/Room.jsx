@@ -232,10 +232,6 @@ function Room() {
         return "Game over";
     }
 
-    function restartGame() {
-        navigate("/lobby");
-    }
-
     function handleMessageKeyDown(e) {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
@@ -297,7 +293,7 @@ function Room() {
     }
 
     return (
-        <div className="flex justify-center items-center w-full px-3 py-4 text-white sm:px-6">
+        <div className="flex justify-center items-center w-full px-3 py-4 text-white sm:px-6 overflow-auto">
             <div className="w-full max-w-7xl">
                 <button className="flex gap-2 items-center text-white/80 hover:text-white cursor-pointer" onClick={leaveRoom}><FaArrowLeftLong />Back to lobby</button>
 
@@ -392,7 +388,7 @@ function Room() {
                         </div>
                     </>
                     :
-                    <div className="flex flex-col gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-start">
+                    <div className="flex flex-col gap-4 lg:gap-6 xl:grid xl:grid-cols-[280px_minmax(320px,600px)_minmax(280px,1fr)] xl:items-center">
                         <div className="flex flex-col gap-5 xl:order-1">
                             <div className="flex justify-between w-full">
                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center xl:flex-col xl:items-start">
@@ -440,7 +436,7 @@ function Room() {
                                     </ul>
                                 </div>
 
-                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl w-full p-6">
+                                <div className="border bg-white/10 backdrop-blur-sm border-white/50 rounded-xl p-6 xl:mb-10">
                                     <p className="flex gap-2 items-center font-bold text-white/80 text-xl"><CiCircleAlert size={30} /> Room Info</p>
                                     <span className="flex justify-between items-center mt-2 text-lg text-white/80">
                                         <p className="pl-2"># Room Code</p>
@@ -453,20 +449,13 @@ function Room() {
                                         <p className="flex items-center gap-2"><IoMdTime size={25} />Time Control</p>
                                         <p className="text-sm pr-2">5:00 + 0</p>
                                     </span>
-
-                                    <hr className="mt-3 mb-3 w-full text-white/20 " />
-
-                                    <span className="flex justify-between items-center mt-2 text-lg text-white/80">
-                                        <p className="pl-1 flex items-center gap-3"><SlCalender size={20} />Created</p>
-                                        <p className="text-sm pr-2">Junt now</p>
-                                    </span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="w-full bg-white/10 p-2 rounded-xl shadow-xl border border-white/50 xl:order-2">
                             <div className="flex flex-col gap-3 justify-between p-2 sm:flex-row sm:items-center">
-                                <div className="flex justify-center items-center gap-1 font-bold text-white/80 text-base"><FaRegCircle size={20} />Turn:{" "}
+                                <div className={`flex justify-center items-center gap-1 font-bold text-white text-base ${turn === "w" ? "bg-white/10 p-2 rounded": "bg-black/40 p-2 rounded"}`}><FaRegCircle size={20} />Turn:{" "}
                                     {turn
                                         ? turn === "w"
                                             ? "White"
@@ -550,16 +539,7 @@ function Room() {
                                         : `${gameResult.winnerName || gameResult.winnerColor || "Winner"} won by ${gameResult.reason || "game result"}.`}
                                 </p>
                                 <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                                    <button
-                                        onClick={restartGame}
-                                        className="flex-1 rounded-xl bg-blue-500 px-4 py-3 font-semibold text-white transition hover:bg-blue-600 cursor-pointer"
-                                    >
-                                        Restart
-                                    </button>
-                                    <button
-                                        onClick={leaveRoom}
-                                        className="flex-1 rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20 cursor-pointer"
-                                    >
+                                    <button onClick={leaveRoom} className="flex-1 rounded-xl bg-white/10 px-4 py-3 font-semibold text-white transition hover:bg-white/20 cursor-pointer">
                                         Exit Game
                                     </button>
                                 </div>

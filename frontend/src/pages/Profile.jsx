@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { api } from "../api/client";
 import { setUser } from "../slices/authSlice"; 
+import { fetchMe } from "../slices/authSlice";
 import { TbUserEdit } from "react-icons/tb";
 import { VscClose } from "react-icons/vsc";
 import { toast } from "react-toastify";
@@ -14,6 +15,21 @@ function Profile() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    async function loadUserData() {
+      try {
+        setFetching(true);
+        await dispatch(fetchMe()).unwrap();
+      } catch (err) {
+        toast.error(err.message || "Failed to load profile data");
+      } finally {
+        setFetching(false);
+      }
+    }
+    loadUserData();
+  }, [dispatch]);
 
   function handleChange(e) {
     const selectedFile = e.target.files[0];
@@ -38,8 +54,6 @@ function Profile() {
       const formData = new FormData();
       formData.append("file", file);
 
-      console.log(formData)
-
       const res = await api.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -52,12 +66,31 @@ function Profile() {
       setPreview(null);
       setFile(null);
 
-      toast.success("Upload successful");
+      toast.success("Profile picture updated successfully");
     } catch (err) {
-      toast.error(err.message || "Upload failed");
+      toast.error(err.response?.data?.message || err.message || "Upload failed");
     } finally {
       setLoading(false);
     }
+  }
+
+  if (fetching) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-white">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+          <p>Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-white">
+        <p>Failed to load profile data</p>
+      </div>
+    );
   }
 
   return (
@@ -82,9 +115,12 @@ function Profile() {
 
         <div className="flex-1 text-center sm:text-left">
           <h2 className="text-xl sm:text-2xl font-bold">
-            {user.user.name || "User Name"}
+            {user?.name || "User Name"}
           </h2>
           <p className="text-white/70 text-sm sm:text-base">{user?.email}</p>
+          <p className="text-white/50 text-xs sm:text-sm mt-1">
+            Joined: {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}
+          </p>
         </div>
 
         <button
@@ -99,24 +135,51 @@ function Profile() {
 
         <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
           <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">⭐Rating</p>
-          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{Math.floor(user.user.stats.rating) || 1200}</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{Math.floor(user?.stats?.rating) || 1200}</p>
         </div>
 
         <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
         <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">♟️Games played</p>
-          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user.user.stats.gamesPlayed || 0}</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.gamesPlayed || 0}</p>
 
         </div>
 
         <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
           <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">🏆Wins</p>
-          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user.user.stats.wins || 0}</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.wins || 0}</p>
 
         </div>
 
         <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
-          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">❌Draws</p>
-          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user.user.stats.draws || 0}</p>
+          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">❌Losses</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.losses || 0}</p>
+        </div>
+      </div>
+
+      <div className="w-full max-w-4xl mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+
+        <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
+          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">🤝Draws</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.draws || 0}</p>
+        </div>
+
+        <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
+          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">🔥Best Streak</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.bestStreak || 0}</p>
+        </div>
+
+        <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
+          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">📈Current Streak</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">{user?.stats?.currentStreak || 0}</p>
+        </div>
+
+        <div className="bg-white/10 p-3 sm:p-4 rounded-xl text-center flex flex-col justify-center items-center">
+          <p className="text-xs sm:text-sm text-white flex justify-center items-center text-lg sm:text-xl font-bold">🎯Win Rate</p>
+          <p className="text-base sm:text-lg font-bold text-lg sm:text-xl">
+            {user?.stats?.gamesPlayed > 0 
+              ? Math.round((user.stats.wins / user.stats.gamesPlayed) * 100) + '%' 
+              : '0%'}
+          </p>
         </div>
       </div>
 
@@ -125,17 +188,25 @@ function Profile() {
         <div className="bg-white/10 p-4 rounded-xl">
           <h3 className="font-semibold mb-3">Achievements</h3>
           <div className="flex flex-wrap gap-3 sm:gap-4 text-center justify-center sm:justify-start">
-            <div className="flex flex-col items-center">🏅<p className="text-xs sm:text-sm">Champion</p></div>
-            <div className="flex flex-col items-center">⭐<p className="text-xs sm:text-sm">Unbeaten</p></div>
-            <div className="flex flex-col items-center">🔥<p className="text-xs sm:text-sm">First Win</p></div>
-            <div className="flex flex-col items-center">🎯<p className="text-xs sm:text-sm">10 Games</p></div>
+            <div className="flex flex-col items-center">
+              🏅<p className="text-xs sm:text-sm">Champion</p>
+            </div>
+            <div className="flex flex-col items-center">
+              ⭐<p className="text-xs sm:text-sm">Unbeaten</p>
+            </div>
+            <div className="flex flex-col items-center">
+              🔥<p className="text-xs sm:text-sm">First Win</p>
+            </div>
+            <div className="flex flex-col items-center">
+              🎯<p className="text-xs sm:text-sm">10 Games</p>
+            </div>
           </div>
         </div>
 
         <div className="bg-white/10 p-4 rounded-xl">
           <h3 className="font-semibold mb-3">Recent Matches</h3>
           <div className="text-sm space-y-2 text-white/80">
-
+            <p className="text-white/50 italic">No recent matches yet</p>
           </div>
         </div>
 
@@ -176,7 +247,7 @@ function Profile() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-500 hover:bg-blue-600 p-2 rounded font-semibold"
+                className="bg-blue-500 hover:bg-blue-600 p-2 rounded font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Uploading..." : "Upload"}
               </button>

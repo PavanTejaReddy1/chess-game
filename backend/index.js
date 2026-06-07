@@ -25,10 +25,23 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/leaderboard", leaderboardRouter);
-app.post("/api/v1/upload", verifyAuth, parser.single("file"), (req, res) => {
+app.post("/api/v1/upload", verifyAuth, parser.single("file"), async (req, res) => {
   try {
     const url = req.file.path;
-    return res.status(200).json({ avatar: url });
+    const userId = req.user._id;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    user.avatar = url;
+    await user.save();
+    
+    const userWithoutPassword = user.toObject();
+    delete userWithoutPassword.passwordHash;
+    
+    return res.status(200).json({ user: userWithoutPassword });
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
