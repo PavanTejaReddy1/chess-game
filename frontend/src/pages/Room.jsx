@@ -336,7 +336,7 @@ function Room() {
                                                     <div className="bg-white/20 p-2 flex items-center text-white/80 gap-2 rounded-xl pl-5 flex border border-dashed border-gray-400">
                                                         <IoPerson size={40} />
                                                         <li key={p.userId}>
-                                                            <p className="font-bold text-lg">wating for opponent...</p>
+                                                            <p className="font-bold text-lg">waiting for opponent...</p>
                                                             <p className="text-sm text-white/60">share the room code to invite the friend</p>
                                                         </li>
                                                     </div>
@@ -365,14 +365,14 @@ function Room() {
 
                                     <span className="flex justify-between items-center mt-2 text-lg text-white/80">
                                         <p className="pl-1 flex items-center gap-3"><SlCalender size={20} />Created</p>
-                                        <p className="text-sm pr-2">Junt now</p>
+                                        <p className="text-sm pr-2">Just now</p>
                                     </span>
                                 </div>
                             </div>
 
                             <div className="w-full flex flex-col gap-2 items-center justify-center bg-white/10 backdrop-blur-sm border border-white/50 rounded-xl p-4 text-center min-h-[320px]">
                                 <FaChess className="text-6xl sm:text-8xl" />
-                                <p className="text-2xl text-white sm:text-4xl">Wating for opponent</p>
+                                <p className="text-2xl text-white sm:text-4xl">Waiting for opponent</p>
                                 <p className="text-base text-white/80 sm:text-lg">Share the room with your friend to start the game.</p>
 
                                 <div className="flex items-center justify-center gap-5">
@@ -425,7 +425,7 @@ function Room() {
                                                     <div className="bg-white/20 p-2 flex items-center text-white/80 gap-2 rounded-xl pl-5 flex border border-dashed border-gray-400">
                                                         <IoPerson size={40} />
                                                         <li key={p.userId}>
-                                                            <p className="font-bold text-lg">wating for opponent...</p>
+                                                            <p className="font-bold text-lg">waiting for opponent...</p>
                                                             <p className="text-sm text-white/60">share the room code to invite the friend</p>
                                                         </li>
                                                     </div>
@@ -464,26 +464,35 @@ function Room() {
                                 </div>
 
                                 <div className="flex flex-wrap gap-3 text-sm">
-                                    <div className="flex gap-2 justify-center items-center bg-white/30 p-1 rounded shadow-xl pl-3 pr-3">
+                                    <div className={`flex gap-2 justify-center items-center p-1 rounded shadow-xl pl-3 pr-3 transition-all duration-300 ${turn === "w" ? "bg-white text-black ring-2 ring-yellow-300 scale-105" : "bg-white/30 text-white"}`}>
                                         <IoMdTime size={25} />
                                         <p className="flex items-center flex-col">
-                                            White Time
-                                            <span>{convertTime(whiteMs)}</span>
+                                            White
+                                            <span className="font-bold">{convertTime(whiteMs)}</span>
                                         </p>
                                     </div>
 
-                                    <div className="flex gap-2 justify-center items-center bg-black/30 p-1 rounded shadow-xl pl-3 pr-3">
+                                    <div className={`flex gap-2 justify-center items-center p-1 rounded shadow-xl pl-3 pr-3 transition-all duration-300 ${turn === "b" ? "bg-gray-900 text-white ring-2 ring-yellow-300 scale-105" : "bg-black/30 text-white"}`}>
                                         <IoMdTime size={25} />
                                         <p className="flex items-center flex-col">
-                                            Black Time
-                                            <span>{convertTime(blackMs)}</span>
+                                            Black
+                                            <span className="font-bold">{convertTime(blackMs)}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mx-auto w-full max-w-[600px] aspect-square">
-                                <Chessboard id="room-board" position={fen || "start"} onPieceDrop={onDrop} />
+            <div className="mx-auto w-full max-w-[600px] aspect-square">
+                                <Chessboard
+                                    id="room-board"
+                                    position={fen || "start"}
+                                    onPieceDrop={onDrop}
+                                    boardOrientation={
+                                        room?.blackId?.toString() === currentUserId?.toString()
+                                            ? "black"
+                                            : "white"
+                                    }
+                                />
                             </div>
 
                         </div>
