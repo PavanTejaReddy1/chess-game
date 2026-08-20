@@ -1,5 +1,7 @@
 # Chess Game
 
+**Live demo: [chess-game-ashy-ten.vercel.app](https://chess-game-ashy-ten.vercel.app/)**
+
 A real-time multiplayer chess web application where players can register, create game rooms, play against each other with a live clock, chat during games, and track their stats on a global leaderboard.
 
 ## Features
